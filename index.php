@@ -1,9 +1,22 @@
 <?php
   require 'config.php';
   // Ne marche pas
-  var_dump($_COOKIE);
 
-  setcookie('cookie', 'test', time()+60*60*24*365, '/juillet2016/AUTHEN', 'localhost', FALSE, TRUE);
+  //setcookie('cookie', 'test', time()+60*60*24*365, '/juillet2016/AUTHEN', 'localhost', FALSE, TRUE);
+  if (!isset($_SESSION['id']) && !isset($_SESSION['login'])) {
+    if (isset($_COOKIE['remember'])) {
+      $token = $_COOKIE['remember'];
+      $query = $db->query("SELECT * FROM users WHERE token = '$token'");
+      $user = $query->fetch();
+      if ($query->rowCount()) {
+        $_SESSION['id'] = $user['id'];
+        $_SESSION['login'] = $user['login'];
+      }
+      else {
+        echo "Vous avez essayer de tricher.";
+      }
+    }
+  }
 ?>
 
 <!DOCTYPE html>
