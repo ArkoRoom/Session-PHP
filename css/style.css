@@ -1,0 +1,14 @@
+body{
+  margin: 0;
+  padding: 0;
+}
+#background{
+  width: 100%;
+  min-height: 400px;
+  background-color: lightgrey;
+}
+fieldset{
+  width: 30%;
+  margin-left: 35%;
+  padding: 1%;
+}
