@@ -6,6 +6,7 @@ body{
 #background{
   width: 100%;
   min-height: 400px;
+  padding-top: 62px;
   background-color: lightgrey;
 }
 fieldset{
@@ -33,6 +34,12 @@ legend{
 .contentFormButton input{
   width: 20%;
   margin-left: 40%;
+}
+#backgroundAuth{
+  width: 100%;
+  min-height: 400px;
+  padding-top: 109px;
+  background-color: lightblue;
 }
 .content{
   width: 50%;

@@ -1,5 +1,6 @@
 <?php
   require 'config.php';
+  var_dump($_SESSION);
 ?>
 
 <!DOCTYPE html>
@@ -13,55 +14,55 @@
   <body>
     <div id="background">
       <?php $valid = true; ?>
-      <fieldset>
-        <legend>Inscription</legend>
           <form method="POST">
-            <div class="contentForm">
-              <label for="login">Login* :</label>
-              <input type="text" name="login" value="">
-              <?php
-                if (isset($_POST['sendButton']) && empty($_POST['login']) && ($_POST['login'] < 2 || $_POST['login'] > 255)) {
-                  echo "<p style='color: red'>Erreur. Vous devez créer un login compris entre 2 et 255 caractères.</p>";
-                  $valid = false;
-                }
-              ?>
-            </div>
-            <div class="contentForm">
-              <label for="email">Email* :</label>
-              <input type="text" name="email" value="">
-              <?php
-                if (isset($_POST['sendButton']) && empty($_POST['email']) && (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))) {
-                  $valid = false;
-                  echo "<p style='color: red'>Erreur. Vous devez créer un email valide.</p>";
-                }
-              ?>
-            </div>
-            <div class="contentForm">
-              <label for="password">Mot de Passe* :</label>
-              <input type="password" name="password" value="">
-              <?php
-                if (isset($_POST['sendButton']) && empty($_POST['login']) && ($_POST['password'] < 2 || $_POST['password'] > 255)) {
-                  echo "<p style='color: red'>Erreur. Vous devez créer un mot de passe compris entre 2 et 255 caractères.</p>";
-                  $valid = false;
-                }
-              ?>
-            </div>
-            <div class="contentForm">
-              <label for="cf-password">Confirmer votre Mot de Passe* :</label>
-              <input type="password" name="cf-password" value="">
-              <?php
-                if (isset($_POST['sendButton']) && ($_POST['password'] != $_POST['cf-password'])) {
-                  echo "<p style='color: red'>Erreur. Vos deux mot de passe doivent correspondre.</p>";
-                  $valid = false;
-                }
-              ?>
-            </div>
-            <div class="contentFormButton">
-              <label for="sendButton"></label>
-              <input type="submit" name="sendButton" value="Valider">
-            </div>
+            <fieldset>
+              <legend>Inscription</legend>
+              <div class="contentForm">
+                <label for="login">Login* :</label>
+                <input type="text" name="login" value="">
+                <?php
+                  if (isset($_POST['sendButton']) && empty($_POST['login']) && ($_POST['login'] < 2 || $_POST['login'] > 255)) {
+                    echo "<p style='color: red'>Erreur. Vous devez créer un login compris entre 2 et 255 caractères.</p>";
+                    $valid = false;
+                  }
+                ?>
+              </div>
+              <div class="contentForm">
+                <label for="email">Email* :</label>
+                <input type="text" name="email" value="">
+                <?php
+                  if (isset($_POST['sendButton']) && empty($_POST['email']) && (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))) {
+                    $valid = false;
+                    echo "<p style='color: red'>Erreur. Vous devez créer un email valide.</p>";
+                  }
+                ?>
+              </div>
+              <div class="contentForm">
+                <label for="password">Mot de Passe* :</label>
+                <input type="password" name="password" value="">
+                <?php
+                  if (isset($_POST['sendButton']) && empty($_POST['login']) && ($_POST['password'] < 2 || $_POST['password'] > 255)) {
+                    echo "<p style='color: red'>Erreur. Vous devez créer un mot de passe compris entre 2 et 255 caractères.</p>";
+                    $valid = false;
+                  }
+                ?>
+              </div>
+              <div class="contentForm">
+                <label for="cf-password">Confirmer votre Mot de Passe* :</label>
+                <input type="password" name="cf-password" value="">
+                <?php
+                  if (isset($_POST['sendButton']) && ($_POST['password'] != $_POST['cf-password'])) {
+                    echo "<p style='color: red'>Erreur. Vos deux mot de passe doivent correspondre.</p>";
+                    $valid = false;
+                  }
+                ?>
+              </div>
+              <div class="contentFormButton">
+                <label for="sendButton"></label>
+                <input type="submit" name="sendButton" value="Valider">
+              </div>
+            </fieldset>
           </form>
-      </fieldset>
     </div>
     <?php
       if (isset($_POST['sendButton']) && $valid = true) {
@@ -95,30 +96,31 @@
             <label for="submitAut"></label>
             <input type="submit" name="submitAut" value="C'est Parti !">
           </div>
+          <?php
+            if (isset($_POST['submitAut'])) {
+              $login = $_POST['nameAut'];
+              $password = $_POST['passwordAut'];
+              if (!empty($login) && !empty($password)) {
+                $query = $db->prepare("SELECT * FROM users WHERE login = :login");
+                $query->bindValue(":login", $login, PDO::PARAM_STR);
+                $query->execute();
+                if ($query->rowCount()) {
+                  $user = $query->fetch();
+                  $valid = password_verify($password, $user['password']);
+                  if ($valid) {
+                    echo "<p class='flashAnswer' style='text-align: center; color: green;'>Bonjour ".$_POST['nameAut']."</p>";
+                  }
+                  else {
+                    echo "Erreur. Veuillez vous enregistrer ou verifier vos données.";
+                  }
+                }
+              }
+            }
+          ?>
         </fieldset>
       </form>
     </div>
-
-    <?php
-      if (isset($_POST['submitAut'])) {
-        $login = $_POST['nameAut'];
-        $password = $_POST['passwordAut'];
-        if (!empty($login) && !empty($password)) {
-          $query = $db->prepare("SELECT * FROM users WHERE login = :login");
-          $query->bindValue(":login", $login, PDO::PARAM_STR);
-          $query->execute();
-          if ($query->rowCount()) {
-            $user = $query->fetch();
-            $valid = password_verify($password, $user['password']);
-            if ($valid) {
-              echo "Bonjour ".$_POST['nameAut'];
-            }
-            else {
-              echo "Erreur. Veuillez vous enregistrer ou verifier vos données.";
-            }
-          }
-        }
-      }
-    ?>
+    <script src="https://code.jquery.com/jquery-3.0.0.min.js" charset="utf-8"></script>
+    <script src="js/script.js" charset="utf-8"></script>
   </body>
 </html>
