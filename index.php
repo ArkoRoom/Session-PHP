@@ -114,6 +114,10 @@
             <label for="passwordAut">Mot de Passe :</label>
             <input type="password" name="passwordAut">
           </div>
+          <div class="content">
+            <label for="remember">Se souvenir de moi ?</label>
+            <input id="checkbox" type="checkbox" name="remember">
+          </div>
           <div class="contentSubmitAut">
             <label for="submitAut"></label>
             <input type="submit" name="submitAut" value="C'est Parti !">
@@ -130,6 +134,11 @@
                   $user = $query->fetch();
                   $valid = password_verify($password, $user['password']);
                   if ($valid) {
+                    if (isset($_POST['remember'])) {
+                      $token = sha1(md5(uniqid().$_SERVER['REMOTE_ADDR']));
+                      setcookie('remember', $token, time()+60*60*24);
+                      $db->query("UPDATE users SET token = '$token' WHERE id = ".$user['id']);
+                    }
                     $_SESSION['id'] = $user['id'];
                     $_SESSION['login'] = $user['login'];
                     header("Location: ".$url);

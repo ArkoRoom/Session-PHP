@@ -56,6 +56,7 @@ a{
   border-radius: 20px;
   margin-top: 5px;
   background-color: lightgrey;
+  cursor: pointer;
 }
 #backgroundAuth{
   width: 100%;
@@ -94,4 +95,9 @@ a{
   border-radius: 20px;
   margin-top: 5px;
   background-color: lightblue;
+  cursor: pointer;
+}
+#checkbox{
+  width: 10%;
+  text-align: left;
 }
