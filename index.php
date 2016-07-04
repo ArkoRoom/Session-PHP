@@ -13,7 +13,10 @@
   </head>
   <body>
     <div id="background">
-      <?php $valid = true; ?>
+      <?php
+      $valid = true;
+      if(!isset($_SESSION['id'])){
+      ?>
           <form method="POST">
             <fieldset>
               <legend>Inscription</legend>
@@ -62,24 +65,36 @@
                 <input type="submit" name="sendButton" value="Valider">
               </div>
             </fieldset>
+            <?php }else{ ?>
+	             <p class='flashAnswer' style='text-align: center; color: green;'> Bonjour <?php echo $_SESSION['login']; ?></p>
+               <a href="logout.php">Se déconnecter</a>
+            <?php } ?>
+            <?php
+              if (isset($_POST['sendButton']) && $valid = true) {
+                $options = array('cost' => 10);
+                $login = trim($_POST['login']);
+                $email = trim($_POST['email']);
+                $password = password_hash(trim($_POST['password']), PASSWORD_BCRYPT, $options);
+                $date = time();
+
+                $query = $db->prepare("SELECT * FROM users WHERE login = :login");
+                $query->bindValue(":login", $login, PDO::PARAM_STR);
+                $query->execute();
+                if (!$query->rowCount()) {
+                  $query = $db->prepare("INSERT INTO users(login, email, password, date) VALUES(:login, :email, :password, :date)");
+                  $query->bindValue(':login', $login, PDO::PARAM_STR);
+                  $query->bindValue(':email', $email, PDO::PARAM_STR);
+                  $query->bindValue(':password', $password, PDO::PARAM_STR);
+                  $query->bindValue(':date', $date, PDO::PARAM_STR);
+                  $query->execute();
+                }
+                else {
+                  echo "<p class='error' style='color: red;'>Erreur ! Ce nom d'utilisateur est déjà pris.</p>";
+                }
+              }
+            ?>
           </form>
     </div>
-    <?php
-      if (isset($_POST['sendButton']) && $valid = true) {
-        $options = array('cost' => 10);
-        $login = trim($_POST['login']);
-        $email = trim($_POST['email']);
-        $password = password_hash(trim($_POST['password']), PASSWORD_BCRYPT, $options);
-        $date = time();
-
-        $query = $db->prepare("INSERT INTO users(login, email, password, date) VALUES(:login, :email, :password, :date)");
-        $query->bindValue(':login', $login, PDO::PARAM_STR);
-        $query->bindValue(':email', $email, PDO::PARAM_STR);
-        $query->bindValue(':password', $password, PDO::PARAM_STR);
-        $query->bindValue(':date', $date, PDO::PARAM_STR);
-        $query->execute();
-      }
-    ?>
     <div id="backgroundAuth">
       <form method="POST">
         <fieldset>
@@ -108,7 +123,9 @@
                   $user = $query->fetch();
                   $valid = password_verify($password, $user['password']);
                   if ($valid) {
-                    echo "<p class='flashAnswer' style='text-align: center; color: green;'>Bonjour ".$_POST['nameAut']."</p>";
+                    $_SESSION['id'] = $user['id'];
+                    $_SESSION['login'] = $user['login'];
+                    header("Location: ".$url);
                   }
                   else {
                     echo "Erreur. Veuillez vous enregistrer ou verifier vos données.";

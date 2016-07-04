@@ -18,6 +18,12 @@ legend{
   font-family: 'Open Sans', sans-serif;
   font-weight: 700;
 }
+a{
+  margin-left: 47%;
+}
+.error{
+  text-align: center;
+}
 .contentForm{
   width: 50%;
   margin-left: 25%;
