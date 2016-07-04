@@ -1,0 +1,18 @@
+<?php
+  define('HOST', 'YOUR-HOST');
+  define('USER', 'YOUR-USER');
+  define('PASS', 'YOUR-PASS');
+  define('DB', 'YOUR-DB');
+
+  $option_db = array(
+    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+  );
+
+  $db = new PDO("mysql:host=".HOST.";dbname=".DB, USER, PASS, $option_db);
+
+  session_start();
+  $url = $_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+  $url = preg_replace('/\?.*/', '', $url);
+?>
