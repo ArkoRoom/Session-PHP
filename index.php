@@ -86,7 +86,11 @@
                   $query->bindValue(':email', $email, PDO::PARAM_STR);
                   $query->bindValue(':password', $password, PDO::PARAM_STR);
                   $query->bindValue(':date', $date, PDO::PARAM_STR);
-                  $query->execute();
+                  if ($query->execute()) {
+                    $_SESSION['id'] = $db->lastInsertId();
+                    $_SESSION['login'] = $login;
+                    header(Location: .$url);
+                  }
                 }
                 else {
                   echo "<p class='error' style='color: red;'>Erreur ! Ce nom d'utilisateur est déjà pris.</p>";
