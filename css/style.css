@@ -1,6 +1,7 @@
 body{
   margin: 0;
   padding: 0;
+  font-family: 'Open Sans', sans-serif;
 }
 #background{
   width: 100%;
@@ -11,4 +12,42 @@ fieldset{
   width: 30%;
   margin-left: 35%;
   padding: 1%;
+}
+legend{
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 700;
+}
+.contentForm{
+  width: 50%;
+  margin-left: 25%;
+}
+.contentForm label{
+  text-align: center;
+}
+.contentForm input{
+  width: 100%;
+}
+.contentFormButton{
+  width: 100%;
+}
+.contentFormButton input{
+  width: 20%;
+  margin-left: 40%;
+}
+.content{
+  width: 50%;
+  margin-left: 25%;
+}
+.content label{
+  text-align: center;
+}
+.content input{
+  width: 100%;
+}
+.contentSubmitAut{
+  width: 100%;
+}
+.contentSubmitAut input{
+  width: 20%;
+  margin-left: 40%;
 }

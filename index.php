@@ -8,6 +8,7 @@
     <meta charset="utf-8">
     <title>PHP - Session</title>
     <link rel="stylesheet" href="css/style.css" media="screen" title="no title" charset="utf-8">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   </head>
   <body>
     <div id="background">
@@ -55,7 +56,7 @@
                 }
               ?>
             </div>
-            <div class="contentForm">
+            <div class="contentFormButton">
               <label for="sendButton"></label>
               <input type="submit" name="sendButton" value="Valider">
             </div>
@@ -78,23 +79,46 @@
         $query->execute();
       }
     ?>
-
     <div id="backgroundAuth">
-      <fieldset>
-        <legend>Authentification</legend>
-        <div class="content">
-          <label for="nameAut">Login :</label>
-          <input type="text" name="nameAut" value="">
-        </div>
-        <div class="content">
-          <label for="passwordAut">Mot de Passe :</label>
-          <input type="password" name="passwordAut" value="">
-        </div>
-        <div class="content">
-          <label for="submitAut"></label>
-          <input type="button" name="submitaut" value="C'est Parti !">
-        </div>
-      </fieldset>
+      <form method="POST">
+        <fieldset>
+          <legend>Authentification</legend>
+          <div class="content">
+            <label for="nameAut">Login :</label>
+            <input type="text" name="nameAut">
+          </div>
+          <div class="content">
+            <label for="passwordAut">Mot de Passe :</label>
+            <input type="password" name="passwordAut">
+          </div>
+          <div class="contentSubmitAut">
+            <label for="submitAut"></label>
+            <input type="submit" name="submitAut" value="C'est Parti !">
+          </div>
+        </fieldset>
+      </form>
     </div>
+
+    <?php
+      if (isset($_POST['submitAut'])) {
+        $login = $_POST['nameAut'];
+        $password = $_POST['passwordAut'];
+        if (!empty($login) && !empty($password)) {
+          $query = $db->prepare("SELECT * FROM users WHERE login = :login");
+          $query->bindValue(":login", $login, PDO::PARAM_STR);
+          $query->execute();
+          if ($query->rowCount()) {
+            $user = $query->fetch();
+            $valid = password_verify($password, $user['password']);
+            if ($valid) {
+              echo "Bonjour ".$_POST['nameAut'];
+            }
+            else {
+              echo "Erreur. Veuillez vous enregistrer ou verifier vos données.";
+            }
+          }
+        }
+      }
+    ?>
   </body>
 </html>
