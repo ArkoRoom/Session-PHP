@@ -19,7 +19,7 @@
               <label for="login">Login* :</label>
               <input type="text" name="login" value="">
               <?php
-                if (isset($_POST['sendButton']) && ($_POST['login'] < 2 || $_POST['login'] > 255)) {
+                if (isset($_POST['sendButton']) && empty($_POST['login']) && ($_POST['login'] < 2 || $_POST['login'] > 255)) {
                   echo "<p style='color: red'>Erreur. Vous devez créer un login compris entre 2 et 255 caractères.</p>";
                   $valid = false;
                 }
@@ -29,7 +29,7 @@
               <label for="email">Email* :</label>
               <input type="text" name="email" value="">
               <?php
-                if (isset($_POST['sendButton']) && empty($_POST['email']) && (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))) {
+                if (isset($_POST['sendButton']) && empty($_POST['email']) && (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))) {
                   $valid = false;
                   echo "<p style='color: red'>Erreur. Vous devez créer un email valide.</p>";
                 }
@@ -39,7 +39,7 @@
               <label for="password">Mot de Passe* :</label>
               <input type="password" name="password" value="">
               <?php
-                if (isset($_POST['sendButton']) && ($_POST['password'] < 2 || $_POST['password'] > 255)) {
+                if (isset($_POST['sendButton']) && empty($_POST['login']) && ($_POST['password'] < 2 || $_POST['password'] > 255)) {
                   echo "<p style='color: red'>Erreur. Vous devez créer un mot de passe compris entre 2 et 255 caractères.</p>";
                   $valid = false;
                 }
@@ -63,11 +63,11 @@
       </fieldset>
     </div>
     <?php
-    $options = array('cost' => 10);
       if (isset($_POST['sendButton']) && $valid = true) {
-        $login = $_POST['login'];
-        $email = $_POST['email'];
-        $password = password_hash($_POST['password'], PASSWORD_BCRYPT, $options);
+        $options = array('cost' => 10);
+        $login = trim($_POST['login']);
+        $email = trim($_POST['email']);
+        $password = password_hash(trim($_POST['password']), PASSWORD_BCRYPT, $options);
         $date = time();
 
         $query = $db->prepare("INSERT INTO users(login, email, password, date) VALUES(:login, :email, :password, :date)");
@@ -78,5 +78,23 @@
         $query->execute();
       }
     ?>
+
+    <div id="backgroundAuth">
+      <fieldset>
+        <legend>Authentification</legend>
+        <div class="content">
+          <label for="nameAut">Login :</label>
+          <input type="text" name="nameAut" value="">
+        </div>
+        <div class="content">
+          <label for="passwordAut">Mot de Passe :</label>
+          <input type="password" name="passwordAut" value="">
+        </div>
+        <div class="content">
+          <label for="submitAut"></label>
+          <input type="button" name="submitaut" value="C'est Parti !">
+        </div>
+      </fieldset>
+    </div>
   </body>
 </html>
