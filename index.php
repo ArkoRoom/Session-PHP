@@ -1,6 +1,5 @@
 <?php
   require 'config.php';
-  var_dump($_SESSION);
 ?>
 
 <!DOCTYPE html>
@@ -89,7 +88,7 @@
                   if ($query->execute()) {
                     $_SESSION['id'] = $db->lastInsertId();
                     $_SESSION['login'] = $login;
-                    header(Location: .$url);
+                    header("Location: ".$url);
                   }
                 }
                 else {
