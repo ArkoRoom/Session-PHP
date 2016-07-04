@@ -1,5 +1,9 @@
 <?php
   require 'config.php';
+  // Ne marche pas
+  var_dump($_COOKIE);
+
+  setcookie('cookie', 'test', time()+60*60*24*365, '/juillet2016/AUTHEN', 'localhost', FALSE, TRUE);
 ?>
 
 <!DOCTYPE html>
