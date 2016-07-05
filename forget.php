@@ -74,7 +74,10 @@
           $checkUser->execute();
           if ($checkUser->rowCount()) {
             $forget = sha1(md5(uniqid().$_SERVER['REMOTE_ADDR']));
-            $db->query("UPDATE users SET forget = '$forget' WHERE login = '".$login."'");
+            $now = new Datetime();
+            $now->modify("+3 day");
+            $date = $now->format('Y-m-d H:i:s');
+            $db->query("UPDATE users SET forget = '$forget', dateForget = '$date' WHERE login = '".$login."'");
             echo "<p class='answerForget'>Bonjour ".$login.", vous pouvez redéfinir votre Mot de Passe sur </p><a href='".$url."?forgetToken=".$forget."'>".$url."?forgetToken=".$forget."</a>";
           }
           else {
